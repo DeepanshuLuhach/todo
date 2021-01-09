@@ -3,6 +3,7 @@ package com.luhach.todo.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.luhach.todo.aop.TrackTime;
 import com.luhach.todo.model.Task;
 import com.luhach.todo.repository.TaskRepository;
 
@@ -14,6 +15,8 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    //Custom Annotation defined to track the time taken by the method using AOP and around advice
+    @TrackTime
     public Task addTask(String description) {
         Task task = new Task();
         task.setDescription(description);
@@ -22,18 +25,21 @@ public class TaskService {
         return task;
     }
 
+    @TrackTime
     public List<Task> getAllTask() {
         List<Task> allTasks = taskRepository.findAll();
         System.out.println("All tasks :: " + allTasks.toString());
         return allTasks;
     }
 
+    @TrackTime
     public void deleteTask(UUID id) {
         System.out.println("Deleted :: " + taskRepository.findById(id).orElse(null).toString());
         taskRepository.deleteById(id);
         return;
     }
 
+    @TrackTime
     public Task getTask(UUID id) {
         Task task = taskRepository.findById(id).orElse(null);
         if (task == null)
@@ -41,6 +47,8 @@ public class TaskService {
         System.out.println("Fetched Task :: " + task.toString());
         return task;
     }
+
+    @TrackTime
     public Task changeTaskStatus(UUID id) {
         Task task = taskRepository.findById(id).orElse(null);
         if (task == null)
@@ -52,6 +60,7 @@ public class TaskService {
         return task;
     }
 
+    @TrackTime
     public Task changeDescription(UUID id, String description){
         Task task = taskRepository.findById(id).orElse(null);
         if (task == null)
